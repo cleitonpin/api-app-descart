@@ -1,21 +1,27 @@
-import User, { IUser } from '../models/user.model';
-import { CreateQuery } from 'mongoose';
+import Franchise, { IFranchise } from "../models/franchise.model";
+import { CreateQuery } from "mongoose";
+import bcrypt from "bcryptjs";
 
-async function CreateUser({
+interface ILogin {
+  email: string;
+  password: string;
+}
+
+async function CreateFranchise({
   email,
-  firstName,
-  lastName,
-  gender,
-  address
-}: CreateQuery<IUser>): Promise<IUser> {
-  return User.create({
+  cnpj,
+  companyName,
+  password,
+  address,
+}: CreateQuery<IFranchise>): Promise<IFranchise> {
+  return Franchise.create({
     email,
-    gender,
-    firstName,
-    lastName,
-    address
+    cnpj,
+    companyName,
+    password,
+    address,
   })
-    .then((data: IUser) => {
+    .then((data: IFranchise) => {
       return data;
     })
     .catch((error: Error) => {
@@ -23,6 +29,37 @@ async function CreateUser({
     });
 }
 
-export default {
-  CreateUser
-};
+async function Login({ email, password }: ILogin) {
+  const franchise = await Franchise.findOne({ email }).lean();
+
+  if (!franchise) {
+    throw new Error("Email not found");
+  }
+
+  const isValid = await bcrypt.compare(password, franchise.password);
+
+  if (!isValid) {
+    throw new Error("Invalid password");
+  }
+
+  delete franchise.password;
+
+  return franchise;
+}
+
+async function GetFranchises() {
+  const franchises = await Franchise.find({}).lean();
+
+  const coordinates = franchises.map((franchise) => {
+    return {
+      latitude: franchise.address.coordinates.latitude,
+      longitude: franchise.address.coordinates.longitude,
+      street: franchise.address.street,
+      companyName: franchise.companyName,
+    };
+  });
+
+  return coordinates;
+}
+
+export { CreateFranchise, Login, GetFranchises };

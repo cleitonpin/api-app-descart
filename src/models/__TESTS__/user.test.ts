@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import User, { IUser } from "../user.model";
+import User, { IUser } from "../franchise.model";
 
 describe("User model", () => {
   beforeAll(async () => {
     await mongoose.connect(global.__MONGO_URI__, {
-      useNewUrlParser: true
+      useNewUrlParser: true,
     });
   });
 
@@ -24,7 +24,7 @@ describe("User model", () => {
     const user: IUser = new User({
       firstName: "Test first name",
       lastName: "Test last name",
-      email: "test@example.com"
+      email: "test@example.com",
     });
     const spy = jest.spyOn(user, "save");
 
@@ -37,7 +37,7 @@ describe("User model", () => {
     expect(user).toMatchObject({
       firstName: expect.any(String),
       lastName: expect.any(String),
-      email: expect.any(String)
+      email: expect.any(String),
     });
 
     expect(user.email).toBe("test@example.com");

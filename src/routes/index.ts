@@ -1,20 +1,41 @@
-import { TRoutesInput } from '../types/routes';
-import UserController from '../controllers/user.controller';
-import PetController from '../controllers/pet.controller';
+import { TRoutesInput } from "../types/routes";
+import {
+  CreateFranchise,
+  GetFranchises,
+  Login,
+} from "../controllers/user.controller";
 
 export default ({ app }: TRoutesInput) => {
-  app.post('/api/user', async (req, res) => {
-    const user = await UserController.CreateUser({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email
+  app.post("/api/franchise", async (req, res) => {
+    const franchise = await CreateFranchise({
+      email: req.body.email,
+      cnpj: req.body.cnpj,
+      companyName: req.body.companyName,
+      password: req.body.password,
+      address: {
+        ...req.body.address,
+        coordinates: {
+          latitude: req.body.address.coordinates.latitude,
+          longitude: req.body.address.coordinates.longitude,
+        },
+      },
     });
 
-    const pet = await PetController.CreatePet({
-      owner: user._id,
-      name: req.body.petName
+    return res.send({ franchise });
+  });
+
+  app.post("/api/franchise/login", async (req, res) => {
+    const franchise = await Login({
+      email: req.body.email,
+      password: req.body.password,
     });
 
-    return res.send({ user, pet });
+    return res.send({ franchise });
+  });
+
+  app.get("/api/franchises", async (req, res) => {
+    const franchises = await GetFranchises();
+
+    return res.send({ franchises });
   });
 };
