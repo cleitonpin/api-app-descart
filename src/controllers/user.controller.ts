@@ -1,11 +1,19 @@
 import Franchise, { IFranchise } from "../models/franchise.model";
 import { CreateQuery } from "mongoose";
 import bcrypt from "bcryptjs";
-
 interface ILogin {
   email: string;
   password: string;
 }
+
+interface IOrder {
+  [key: string]: {};
+}
+
+const orders: IOrder = {
+  "name-asc": { companyName: 1 },
+  "name-desc": { companyName: -1 },
+};
 
 async function CreateFranchise({
   email,
@@ -47,8 +55,8 @@ async function Login({ email, password }: ILogin) {
   return franchise;
 }
 
-async function GetFranchises() {
-  const franchises = await Franchise.find({}).lean();
+async function GetFranchises(order?: string) {
+  const franchises = await Franchise.find({}).sort(orders[order]).lean();
 
   const coordinates = franchises.map((franchise) => {
     return {

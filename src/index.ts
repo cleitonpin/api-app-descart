@@ -17,7 +17,8 @@ app.get("/", (req: Request, res: Response) =>
 app.listen(port, () =>
   console.log(`Application started successfully on port ${port}.`)
 );
-const db = process.env.MONGODB_URI || "mongodb://localhost:27017/franchise";
+const db =
+  "mongodb+srv://admin:Iow8tF6wmhvxT9I1@cluster0.k4x76.mongodb.net/descartfarm?retryWrites=true&w=majority";
 
 connect({ db });
 routes({ app });

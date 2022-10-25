@@ -34,7 +34,7 @@ export default ({ app }: TRoutesInput) => {
   });
 
   app.get("/api/franchises", async (req, res) => {
-    const franchises = await GetFranchises();
+    const franchises = await GetFranchises(req.query.order || {});
 
     return res.send({ franchises });
   });
