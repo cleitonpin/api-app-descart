@@ -29,5 +29,4 @@ export interface IFranchise {
   password: string;
   type: string;
   address?: Address;
-  phone?: string;
 }

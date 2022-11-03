@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 
-export interface Address extends Document {
+export interface Address {
   street: string;
   city: string;
   uf: string;
@@ -22,10 +22,9 @@ export interface IFranchise extends Document {
   password: string;
   type: string;
   address?: Address;
-  phone?: string;
 }
 
-const FranchiseSchema: Schema = new Schema({
+export const FranchiseSchema: Schema = new Schema<IFranchise>({
   email: { type: String, required: true, unique: true },
   cnpj: { type: Number, required: true, unique: true },
   companyName: { type: String, required: true },

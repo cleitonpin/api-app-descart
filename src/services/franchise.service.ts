@@ -1,4 +1,4 @@
-import franchiseModel from "../models/franchise.model";
+import franchiseModel, { FranchiseSchema } from "../models/franchise.model";
 import { IFranchise, ILogin } from "../interfaces";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";

@@ -6,6 +6,8 @@
   "author": "Tom Nagle",
   "scripts": {
     "dev": "tsnd --transpile-only --ignore-watch node_modules src/index.ts",
+    "build": "tsc --build",
+    "start": "node dist/index.js",
     "test": "jest"
   },
   "license": "MIT",
@@ -24,6 +26,7 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.14",
+    "@types/express-serve-static-core": "^4.17.31",
     "@types/jest": "^26.0.5",
     "@types/mongoose": "^5.7.32",
     "@types/node": "^18.11.9",

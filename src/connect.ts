@@ -11,7 +11,7 @@ export default ({ db }: TInput) => {
         useUnifiedTopology: true,
       })
       .then(() => {
-        return console.info(`Successfully connected to ${db}`);
+        return console.info(`Successfully connected to DB`);
       })
       .catch((error) => {
         console.error("Error connecting to database: ", error);
