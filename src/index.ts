@@ -5,7 +5,7 @@ import cors from "cors";
 import connect from "./connect";
 import { franchiseRoutes } from "./routes";
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
