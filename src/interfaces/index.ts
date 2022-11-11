@@ -14,6 +14,7 @@ export interface Address {
   state: string;
   zip: string;
   district: string;
+  number: Number;
   complement: string;
   coordinates: {
     latitude: number;

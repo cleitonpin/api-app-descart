@@ -8,6 +8,7 @@ export interface Address {
   state: string;
   zip: string;
   district: string;
+  number: Number;
   complement: string;
   coordinates: {
     latitude: number;
@@ -33,6 +34,7 @@ export const FranchiseSchema: Schema = new Schema({
   address: {
     street: { type: String, required: true },
     city: { type: String, required: true },
+    number: { type: Number, required: true },
     uf: { type: String, required: true },
     state: { type: String, required: true },
     zip: { type: String, required: true },

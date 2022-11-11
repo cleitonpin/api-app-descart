@@ -39,6 +39,21 @@ class FranchiseController {
 
     return res.json({ franchises });
   };
+
+  getFranchise = async (req: Request, res: Response) => {
+    const franchise = await this.franchiseService.getFranchise(req.params.id);
+
+    return res.json({ franchise });
+  };
+
+  updateFranchise = async (req: Request, res: Response) => {
+    const franchise = await this.franchiseService.updateFranchise(
+      req.params.id,
+      req.body
+    );
+
+    return res.json({ franchise });
+  };
 }
 
 export default new FranchiseController(franchiseService);

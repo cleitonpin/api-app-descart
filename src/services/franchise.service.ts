@@ -8,6 +8,8 @@ export interface IFranchiseService {
   createFranchise: (franchise: IFranchise) => Promise<IFranchise>;
   login: (login: ILogin) => Promise<IFranchise>;
   getFranchises: (order?: string) => Promise<any[]>;
+  getFranchise: (id: string) => Promise<IFranchise>;
+  updateFranchise: (id: string, franchise: IFranchise) => Promise<IFranchise>;
   generateToken: (id: string) => string;
 }
 
@@ -71,6 +73,30 @@ class FranchiseService implements IFranchiseService {
     });
 
     return coordinates;
+  }
+
+  public async getFranchise(id: string) {
+    const franchise = await franchiseModel.findById(id).lean();
+
+    if (!franchise) {
+      throw new Error("Franchise not found");
+    }
+
+    return franchise;
+  }
+
+  public async updateFranchise(id: string, franchise: IFranchise) {
+    const updatedFranchise = await franchiseModel
+      .findByIdAndUpdate(id, franchise, { new: true })
+      .lean();
+
+    if (!updatedFranchise) {
+      throw new Error("Franchise not found");
+    }
+
+    delete updatedFranchise.password;
+
+    return updatedFranchise;
   }
 
   public generateToken(id: string) {
