@@ -3,7 +3,8 @@ import { IFranchise, ILogin } from "../interfaces";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { orders } from "../utils";
-
+import sgMail from "@sendgrid/mail";
+import { resetPasswordTemplate } from "../templates/reset-password";
 export interface IFranchiseService {
   createFranchise: (franchise: IFranchise) => Promise<IFranchise>;
   login: (login: ILogin) => Promise<IFranchise>;
@@ -11,7 +12,15 @@ export interface IFranchiseService {
   getFranchise: (id: string) => Promise<IFranchise>;
   updateFranchise: (id: string, franchise: IFranchise) => Promise<IFranchise>;
   generateToken: (id: string) => string;
+  forgotPassword: (id: string, origin: string) => Promise<string>;
+  resetPassword: (
+    id: string,
+    password: string,
+    token: string
+  ) => Promise<IFranchise>;
 }
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 class FranchiseService implements IFranchiseService {
   public async createFranchise(franchise: IFranchise) {
@@ -103,6 +112,58 @@ class FranchiseService implements IFranchiseService {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+  }
+
+  public async forgotPassword(email: string, origin: string) {
+    const franchise = await franchiseModel
+      .findOne({ email })
+      .select("+password")
+      .lean();
+
+    if (!franchise) {
+      throw new Error("Franchise not found");
+    }
+
+    const token = jwt.sign({ userId: franchise._id }, process.env.JWT_SECRET, {
+      subject: String(franchise._id),
+      expiresIn: 1000 * 60 * 10,
+      issuer: "descartfarm.com.br",
+      audience: "descart_farm",
+    });
+
+    const url = `${origin}/resetar-senha/?token=${token}`;
+
+    await sgMail.send({
+      to: "cleiton.riot2@gmail.com",
+      from: "cleiton.biou@gmail.com",
+      html: resetPasswordTemplate(franchise.companyName, url),
+      subject: "Redefinição de senha DescartFarm",
+    });
+
+    return "Email sent";
+  }
+
+  public async resetPassword(id: string, password: string, token: string) {
+    const franchise = await franchiseModel
+      .findById(id)
+      .select("+password")
+      .lean();
+
+    if (!token) {
+      throw new Error("Token not provided");
+    }
+
+    if (!franchise) {
+      throw new Error("Franchise not found");
+    }
+
+    const newPassword = await bcrypt.hash(password, 8);
+
+    franchise.password = newPassword;
+
+    await franchiseModel.findByIdAndUpdate(id, franchise);
+
+    return franchise;
   }
 }
 

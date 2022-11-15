@@ -12,5 +12,13 @@ franchiseRoutes.put(
   authMiddleware,
   FranchiseController.updateFranchise
 );
+franchiseRoutes.post(
+  "/franchise/forgot-password",
+  FranchiseController.forgotPassword
+);
+franchiseRoutes.post(
+  "/franchise/reset-password",
+  FranchiseController.resetPassword
+);
 
 export default franchiseRoutes;

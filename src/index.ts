@@ -3,18 +3,18 @@ import express from "express";
 import cors from "cors";
 
 import connect from "./connect";
+import credentials from "./middleware/credentials";
+import { corsOptionsDelegate } from "./config/allowedOrigins";
 import { franchiseRoutes } from "./routes";
+
 const app = express();
 const port = process.env.PORT || 8080;
 
-app.use(cors());
+app.use(credentials);
+app.use(cors(corsOptionsDelegate));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(franchiseRoutes);
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 app.listen(port, () =>
   console.log(`Application started successfully on port ${port}.`)
