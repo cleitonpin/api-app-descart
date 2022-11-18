@@ -1,5 +1,5 @@
 export const allowlist = [
-  "http://localhost:5173",
+  "http://127.0.0.1:5173",
   "https://admin-descart-farm-app.vercel.app",
 ];
 

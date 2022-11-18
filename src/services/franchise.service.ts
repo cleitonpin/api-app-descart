@@ -6,7 +6,9 @@ import { orders } from "../utils";
 import sgMail from "@sendgrid/mail";
 import { resetPasswordTemplate } from "../templates/reset-password";
 export interface IFranchiseService {
-  createFranchise: (franchise: IFranchise) => Promise<IFranchise>;
+  createFranchise: (
+    franchise: IFranchise | IFranchise[]
+  ) => Promise<IFranchise>;
   login: (login: ILogin) => Promise<IFranchise>;
   getFranchises: (order?: string) => Promise<any[]>;
   getFranchise: (id: string) => Promise<IFranchise>;
@@ -24,6 +26,29 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 class FranchiseService implements IFranchiseService {
   public async createFranchise(franchise: IFranchise) {
+    if (Array.isArray(franchise)) {
+      const usersWithHashedPasswordsPromiseArray = franchise.map(
+        async (franchise) => {
+          const hashedPassword = await bcrypt.hash(franchise.password, 8);
+
+          return {
+            ...franchise,
+            password: hashedPassword,
+          };
+        }
+      );
+
+      const usersWithHashedPasswords = await Promise.all(
+        usersWithHashedPasswordsPromiseArray
+      );
+
+      const franchises = await franchiseModel.insertMany(
+        usersWithHashedPasswords
+      );
+
+      return franchises;
+    }
+
     const exists = await franchiseModel.findOne({
       $or: [{ email: franchise.email }, { cnpj: franchise.cnpj }],
     });
@@ -134,7 +159,7 @@ class FranchiseService implements IFranchiseService {
     const url = `${origin}/resetar-senha/?token=${token}`;
 
     await sgMail.send({
-      to: "cleiton.riot2@gmail.com",
+      to: email,
       from: "cleiton.biou@gmail.com",
       html: resetPasswordTemplate(franchise.companyName, url),
       subject: "Redefinição de senha DescartFarm",
