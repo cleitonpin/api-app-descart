@@ -36,7 +36,6 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/mongoose": "^5.7.32",
     "@types/node": "^18.11.9",
-    "@types/yup": "^0.32.0",
     "jest": "^26.1.0",
     "jest-environment-node": "^26.1.0",
     "mongodb-memory-server": "^6.2.1",

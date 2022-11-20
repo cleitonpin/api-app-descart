@@ -11,6 +11,8 @@ const franchiseRoutes = Router();
 const rateLimitConfig: Partial<Options> = {
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
   store: new MemoryStore(),
   handler: (req, res) => {
     res.status(429).json({ error: true, message: "Too many requests" });
