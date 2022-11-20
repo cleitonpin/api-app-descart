@@ -1,10 +1,12 @@
-import franchiseModel, { FranchiseSchema } from "../models/franchise.model";
-import { IFranchise, ILogin } from "../interfaces";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { orders } from "../utils";
 import sgMail from "@sendgrid/mail";
+
+import franchiseModel from "../models/franchise.model";
+import { IFranchise, ILogin } from "../interfaces";
+import { orders } from "../utils";
 import { resetPasswordTemplate } from "../templates/reset-password";
+
 export interface IFranchiseService {
   createFranchise: (
     franchise: IFranchise | IFranchise[]
@@ -54,7 +56,7 @@ class FranchiseService implements IFranchiseService {
     });
 
     if (exists) {
-      throw new Error("Email or CNPJ already exists");
+      throw new Error("Email ou CNPJ já cadastrado");
     }
 
     return franchiseModel
