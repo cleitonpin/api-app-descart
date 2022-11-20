@@ -18,7 +18,7 @@ export default (schema: yup.AnyObjectSchema) => async (
         };
       });
 
-      return res.status(400).json({ errors });
+      return res.status(400).json({ error: true, errors });
     }
 
     res.status(400).json({ error: err.message });

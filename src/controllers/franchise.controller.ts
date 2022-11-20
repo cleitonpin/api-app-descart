@@ -22,7 +22,7 @@ class FranchiseController {
         token: this.franchiseService.generateToken(franchise._id),
       });
     } catch (error) {
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({ error: true, message: error.message });
     }
   };
 
@@ -66,7 +66,6 @@ class FranchiseController {
 
   forgotPassword = async (req: Request, res: Response) => {
     const { email } = req.body;
-    const origin = "http://localhost:8080";
 
     try {
       await this.franchiseService.forgotPassword(email, req.headers.origin);
@@ -107,8 +106,7 @@ class FranchiseController {
         message: "Senha alterada com sucesso",
       });
     } catch (error) {
-      console.log(error);
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({ error: true, message: error.message });
     }
   };
 }
