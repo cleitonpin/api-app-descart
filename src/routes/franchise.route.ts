@@ -21,6 +21,7 @@ const rateLimitConfig: Partial<Options> = {
 
 franchiseRoutes.post(
   "/franchise",
+  rateLimit(rateLimitConfig),
   validateMiddleware(franchiseSchema),
   FranchiseController.create
 );
