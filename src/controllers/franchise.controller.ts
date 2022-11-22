@@ -15,7 +15,10 @@ class FranchiseController {
 
   create = async (req: Request, res: Response) => {
     try {
-      const franchise = await this.franchiseService.createFranchise(req.body);
+      const franchise = await this.franchiseService.createFranchise({
+        ...req.body,
+        cnpj: Number(req.body.cnpj.replace(/\D/g, "")),
+      });
 
       return res.json({
         franchise,

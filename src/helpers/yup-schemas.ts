@@ -44,12 +44,7 @@ export const loginSchema = yup.object().shape({
 
 export const franchiseSchema = yup.object().shape({
   email: yup.string().email().required(),
-  cnpj: yup
-    .string()
-    .required()
-    .matches(/^[0-9]+$/, "Somente números")
-    .max(14)
-    .min(14),
+  cnpj: yup.string().required(),
   companyName: yup.string().required(),
   password: yup.string().required(),
   address: yup.object().shape({
@@ -60,7 +55,7 @@ export const franchiseSchema = yup.object().shape({
     zip: yup.string().required(),
     district: yup.string().required(),
     number: yup.number().required(),
-    complement: yup.string().required(),
+    complement: yup.string(),
     coordinates: yup.object().shape({
       latitude: yup.number().required(),
       longitude: yup.number().required(),
