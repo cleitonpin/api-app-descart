@@ -161,14 +161,15 @@ class FranchiseService implements IFranchiseService {
     const url = `${origin}/resetar-senha/?token=${token}`;
 
     try {
+      console.log("Sending email...", process.env.SENDGRID_API_KEY);
       await sgMail.send({
-        to: "cleiton.riot2@gmail.com",
-        from: "cleiton.biou@gmail.com",
+        to: email,
+        from: "lrezendev.pj@gmail.com",
         html: resetPasswordTemplate(franchise.companyName, url),
         subject: "Redefinição de senha DescartFarm",
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.response.body);
       throw new Error("Erro ao enviar email");
     }
 
