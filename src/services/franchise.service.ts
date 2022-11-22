@@ -148,7 +148,7 @@ class FranchiseService implements IFranchiseService {
       .lean();
 
     if (!franchise) {
-      throw new Error("Franchise not found");
+      throw new Error("Email não encontrado");
     }
 
     const token = jwt.sign({ userId: franchise._id }, process.env.JWT_SECRET, {
@@ -160,12 +160,17 @@ class FranchiseService implements IFranchiseService {
 
     const url = `${origin}/resetar-senha/?token=${token}`;
 
-    await sgMail.send({
-      to: email,
-      from: "cleiton.biou@gmail.com",
-      html: resetPasswordTemplate(franchise.companyName, url),
-      subject: "Redefinição de senha DescartFarm",
-    });
+    try {
+      await sgMail.send({
+        to: "cleiton.riot2@gmail.com",
+        from: "cleiton.biou@gmail.com",
+        html: resetPasswordTemplate(franchise.companyName, url),
+        subject: "Redefinição de senha DescartFarm",
+      });
+    } catch (error) {
+      console.log(error);
+      throw new Error("Erro ao enviar email");
+    }
 
     return "Email sent";
   }

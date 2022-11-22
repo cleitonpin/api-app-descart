@@ -77,7 +77,7 @@ class FranchiseController {
       });
     } catch (error) {
       console.log(error);
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({ error: true, message: error.message });
     }
   };
 
