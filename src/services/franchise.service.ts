@@ -51,12 +51,22 @@ class FranchiseService implements IFranchiseService {
       return franchises;
     }
 
+    if (franchise.type === "franchise") {
+      const cnpjExists = await franchiseModel.findOne({
+        cnpj: franchise.cnpj,
+      });
+
+      if (cnpjExists) {
+        throw new Error("CNPJ já cadastrado");
+      }
+    }
+
     const exists = await franchiseModel.findOne({
-      $or: [{ email: franchise.email }, { cnpj: franchise.cnpj }],
+      email: franchise.email,
     });
 
     if (exists) {
-      throw new Error("Email ou CNPJ já cadastrado");
+      throw new Error("Franquia já cadastrada");
     }
 
     return franchiseModel
@@ -72,6 +82,7 @@ class FranchiseService implements IFranchiseService {
         return data;
       })
       .catch((error: Error) => {
+        console.log(error);
         throw error;
       });
   }

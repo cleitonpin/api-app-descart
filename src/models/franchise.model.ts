@@ -27,7 +27,7 @@ export interface IFranchise extends Document {
 
 export const FranchiseSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
-  cnpj: { type: Number, required: true, unique: true },
+  cnpj: { type: Number, required: true },
   companyName: { type: String, required: true },
   password: { type: String, required: true },
   type: { type: String, required: true, default: "franchise" },
