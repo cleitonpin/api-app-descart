@@ -21,7 +21,7 @@ export default function authMiddleware(
 
     if (!token) {
       return res.status(401).json({
-        message: "Token no provided",
+        message: "Token no providede",
       });
     }
     try {
